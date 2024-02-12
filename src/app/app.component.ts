@@ -2,22 +2,25 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  template: ` <div class="app">
-    <header class="header">
-      <img src="/assets/img/logo.svg" alt="Ultimate Donuts" class="logo"/>
-    </header>
-    <app-donut-single></app-donut-single>
-    </div> `,
+  template: `
+    <div class="app">
+      <header class="header">
+        <img src="/assets/img/logo.svg" alt="Ultimate Donuts" class="logo" />
+      </header>
+      <app-donut-single></app-donut-single>
+      <!-- <app-donut-list></app-donut-list> -->
+    </div>
+  `,
   styles: [
     `
       .app {
-      background: #fff;
-      border-radius: 8px;
-      max-width: 400px;
-      width: 94%;
-      margin: 25px auto;
-      padding: 25px;
-      border: 4px solid #ef9fc7;
+        background: #fff;
+        border-radius: 8px;
+        max-width: 400px;
+        width: 94%;
+        margin: 25px auto;
+        padding: 25px;
+        border: 4px solid #ef9fc7;
       }
 
       .header {

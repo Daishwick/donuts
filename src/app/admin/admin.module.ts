@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 //components
 import { DonutCardComponent } from './components/donut-card/donut-card.component';
@@ -17,7 +18,7 @@ import { DonutSingleComponent } from './containers/donut-single/donut-single.com
     DonutSingleComponent,
     DonutFormComponent,
   ],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   exports: [DonutListComponent, DonutSingleComponent],
 })
 export class AdminModule {}

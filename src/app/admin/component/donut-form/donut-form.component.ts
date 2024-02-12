@@ -5,7 +5,7 @@ import { Donut } from '../../models/donut.model';
 @Component({
   selector: 'app-donut-form',
   template: `
-    <form (ngSubmit)="handleSubmit(form)" #form="ngForm" class="donut-form">
+    <form #form="ngForm" class="donut-form" *ngIf="donut; else loading">
       <label>
         <span>Name</span>
         <input
@@ -72,16 +72,26 @@ import { Donut } from '../../models/donut.model';
             name="promo"
             [defaultChecked]="true"
             [value]="undefined"
-            [ngModel]= "donut.promo"
+            [ngModel]="donut.promo"
           />
           <span>None</span>
         </label>
         <label>
-          <input type="radio" name="promo" value="new" [ngModel]="donut.promo" />
+          <input
+            type="radio"
+            name="promo"
+            value="new"
+            [ngModel]="donut.promo"
+          />
           <span>New</span>
         </label>
         <label>
-          <input type="radio" name="promo" value="limited" [ngModel]="donut.promo" />
+          <input
+            type="radio"
+            name="promo"
+            value="limited"
+            [ngModel]="donut.promo"
+          />
           <span>Limited</span>
         </label>
       </div>
@@ -104,7 +114,20 @@ import { Donut } from '../../models/donut.model';
         </ng-container>
       </label>
 
-      <button type="submit" class="btn btn--green">Create</button>
+      <button type="button" class="btn btn--green" (click)="handleCreate(form)">
+        Create
+      </button>
+      <button
+        type="button"
+        class="btn btn--green"
+        [disabled]="form.untouched"
+        (click)="handleUpdate(form)"
+      >
+        Update
+      </button>
+      <button type="button" class="btn btn--green" (click)="handleDelete(form)">
+        Delete
+      </button>
       <button type="button" class="btn btn--grey" (click)="form.resetForm()">
         Reset Form
       </button>
@@ -112,14 +135,9 @@ import { Donut } from '../../models/donut.model';
       <div class="donut-form-working" *ngIf="form.valid && form.submitted">
         working...
       </div>
-
-      <pre>
-
-      {{ donut | json}}
-        {{ form.value | json }}
-      </pre
-      >
     </form>
+
+    <ng-template #loading>Loading...</ng-template>
   `,
   styles: [
     `
@@ -168,14 +186,34 @@ export class DonutFormComponent {
 
   @Output()
   public create: EventEmitter<Donut> = new EventEmitter<Donut>();
+  @Output()
+  public update: EventEmitter<Donut> = new EventEmitter<Donut>();
+  @Output()
+  public delete: EventEmitter<Donut> = new EventEmitter<Donut>();
+
   constructor() {}
 
-  public handleSubmit(form: NgForm): void {
-    if (form.invalid) {
+  public handleCreate(form: NgForm): void {
+    if (form.valid) {
+      this.create.emit(form.value);
+    } else {
       form.form.markAllAsTouched();
-      return;
     }
+  }
 
-    this.create.emit(form.value);
+  public handleUpdate(form: NgForm): void {
+    if (form.valid) {
+      this.update.emit({ id: this.donut.id, ...form.value });
+    } else {
+      form.form.markAllAsTouched();
+    }
+  }
+
+  public handleDelete(form: NgForm): void {
+    if (confirm(`Really delete ${this.donut.name}?`)) {
+      this.delete.emit({ ...this.donut });
+    } else {
+      form.form.markAllAsTouched();
+    }
   }
 }
