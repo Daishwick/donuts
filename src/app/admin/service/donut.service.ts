@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { find, map, of, tap } from 'rxjs';
+import { catchError, map, of, retry, tap, throwError } from 'rxjs';
 
 import { Donut } from '../models/donut.model';
 
@@ -18,9 +18,13 @@ export class DonutService {
       return of(this.donuts);
     }
 
-    return this.http
-      .get<Donut[]>(`http://localhost:3000/donut`)
-      .pipe(tap((donuts) => (this.donuts = donuts)));
+    return this.http.get<Donut[]>(`http://localhost:3000/donut`).pipe(
+      tap((donuts) => {
+        this.donuts = donuts;
+      }),
+      retry(2),
+      catchError(this.handleError)
+    );
   }
 
   readOne(id: string) {
@@ -44,22 +48,48 @@ export class DonutService {
     return this.http.post<Donut>(`http://localhost:3000/donut`, payload).pipe(
       tap((donut) => {
         this.donuts = [...this.donuts, donut];
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
   update(payload: Donut) {
-    this.donuts = this.donuts.map((donut: Donut) => {
-      if (donut.id === payload.id) {
-        return payload;
-      }
-      return donut;
-    });
-    console.log(this.donuts);
+    return this.http
+      .put<Donut>(`http://localhost:3000/donut/${payload.id}`, payload)
+      .pipe(
+        tap((donut) => {
+          this.donuts = this.donuts.map((item: Donut) => {
+            if (item.id === donut.id) {
+              return donut;
+            }
+            return item;
+          });
+        }),
+        catchError(this.handleError)
+      );
   }
 
   delete(payLoad: Donut) {
-    this.donuts = this.donuts.filter((donut: Donut) => donut.id !== payLoad.id);
-    console.log(this.donuts);
+    return this.http
+      .delete<Donut>(`http://localhost:3000/donut/${payLoad.id}`)
+      .pipe(
+        tap(() => {
+          this.donuts = this.donuts.filter(
+            (donut: Donut) => donut.id !== payLoad.id
+          );
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(err: HttpErrorResponse) {
+    if (err.error instanceof ErrorEvent) {
+      //client-side
+      console.warn('Client', err.message);
+    } else {
+      //server-side
+      console.warn('Server', err.status);
+    }
+    return throwError(() => new Error(err.message));
   }
 }

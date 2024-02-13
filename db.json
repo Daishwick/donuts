@@ -27,7 +27,7 @@
       "id": "8ankz9",
       "name": "Sour Supreme",
       "icon": "sour-supreme",
-      "price": 139,
+      "price": 149,
       "description": "For the sour advocate"
     },
     {
@@ -36,21 +36,6 @@
       "icon": "zesty-lemon",
       "price": 129,
       "description": "Delicious lucious lemon"
-    },
-    {
-      "name": "tests",
-      "icon": "zesty-lemon",
-      "price": 0,
-      "description": "description",
-      "id": "0W1DgCT"
-    },
-    {
-      "name": "Expensive",
-      "icon": "caramel-swirl",
-      "price": 500,
-      "promo": "limited",
-      "description": "expensive donut",
-      "id": "lcrHgQV"
     }
   ]
 }
