@@ -114,7 +114,12 @@ import { Donut } from '../../models/donut.model';
         </ng-container>
       </label>
 
-      <button type="button" class="btn btn--green" (click)="handleCreate(form)">
+      <button
+        type="button"
+        class="btn btn--green"
+        *ngIf="!isEdit"
+        (click)="handleCreate(form)"
+      >
         Create
       </button>
       <button
@@ -131,7 +136,7 @@ import { Donut } from '../../models/donut.model';
       <button type="button" class="btn btn--grey" (click)="form.resetForm()">
         Reset Form
       </button>
-
+      {{isEdit}}
       <div class="donut-form-working" *ngIf="form.valid && form.submitted">
         working...
       </div>
@@ -183,6 +188,9 @@ export class DonutFormComponent {
 
   @Input()
   public donut!: Donut;
+
+  @Input()
+  public isEdit!: boolean;
 
   @Output()
   public create: EventEmitter<Donut> = new EventEmitter<Donut>();

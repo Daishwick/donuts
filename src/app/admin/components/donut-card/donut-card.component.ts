@@ -4,8 +4,9 @@ import { Donut } from '../../models/donut.model';
 @Component({
   selector: 'app-donut-card',
   template: `
-    <div
+    <a
       class="donut-card"
+      [routerLink]="donut.id"
       [ngClass]="{
         'donut-card-promo': donut.promo
       }"
@@ -20,14 +21,16 @@ import { Donut } from '../../models/donut.model';
           {{ donut.name }}
           <ng-container [ngSwitch]="donut.promo">
             <span *ngSwitchCase="'new'" class="donut-card-label">NEW</span>
-            <span *ngSwitchCase="'limited'" class="donut-card-label">LIMITED</span>
+            <span *ngSwitchCase="'limited'" class="donut-card-label"
+              >LIMITED</span
+            >
           </ng-container>
         </p>
         <p class="donut-card-price">
           {{ donut.price / 100 | currency }}
         </p>
       </div>
-    </div>
+    </a>
   `,
   styles: [
     `

@@ -1,7 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 
-import { catchError, map, of, retry, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  delay,
+  map,
+  of,
+  retryWhen,
+  take,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { Donut } from '../models/donut.model';
 
@@ -17,17 +30,24 @@ export class DonutService {
     if (this.donuts.length) {
       return of(this.donuts);
     }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    }).append('Api-Token', '12345abc');
 
-    return this.http.get<Donut[]>(`http://localhost:3000/donut`).pipe(
+    const options = {
+      headers,
+    };
+
+    return this.http.get<Donut[]>(`http://localhost:3000/donut`, options).pipe(
       tap((donuts) => {
         this.donuts = donuts;
       }),
-      retry(2),
+      retryWhen((errors) => errors.pipe(delay(5000), take(2))),
       catchError(this.handleError)
     );
   }
 
-  readOne(id: string) {
+  readOne(id: string | null) {
     return this.read().pipe(
       map((donuts: Donut[]) => {
         const donut = donuts.find((donut: Donut) => donut.id === id);

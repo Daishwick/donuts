@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Donut } from '../../models/donut.model';
 import { DonutService } from '../../service/donut.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-donut-single',
@@ -8,6 +9,7 @@ import { DonutService } from '../../service/donut.service';
     <div>
       <app-donut-form
         [donut]="donut"
+        [isEdit]="isEdit"
         (create)="onCreate($event)"
         (update)="onUpdate($event)"
         (delete)="onDelete($event)"
@@ -18,15 +20,21 @@ import { DonutService } from '../../service/donut.service';
 })
 export class DonutSingleComponent implements OnInit {
   public donut!: Donut;
+  public isEdit!: boolean;
 
-  constructor(private donutService: DonutService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private donutService: DonutService
+  ) {}
 
   public ngOnInit(): void {
-    const id = '0W1DgCT';
+    const id = this.route.snapshot.paramMap.get('id');
 
     this.donutService
-      .readOne('lcrHgQV')
+      .readOne(id)
       .subscribe((donut: Donut) => (this.donut = donut));
+
+    this.isEdit = this.route.snapshot.data.isEdit;
   }
 
   public onCreate(donut: Donut): void {
