@@ -1,8 +1,11 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { Donut } from '../../models/donut.model';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
+  standalone: true,
+  imports: [FormsModule, NgIf, NgForOf],
   selector: 'app-donut-form',
   template: `
     <form #form="ngForm" class="donut-form" *ngIf="donut; else loading">
@@ -125,18 +128,28 @@ import { Donut } from '../../models/donut.model';
       <button
         type="button"
         class="btn btn--green"
+        *ngIf="isEdit"
         [disabled]="form.untouched"
         (click)="handleUpdate(form)"
       >
         Update
       </button>
-      <button type="button" class="btn btn--green" (click)="handleDelete(form)">
+      <button
+        type="button"
+        class="btn btn--green"
+        *ngIf="isEdit"
+        (click)="handleDelete(form)"
+      >
         Delete
       </button>
-      <button type="button" class="btn btn--grey" (click)="form.resetForm()">
+      <button
+        type="button"
+        class="btn btn--grey"
+        *ngIf="form.touched || isEdit"
+        (click)="form.resetForm()"
+      >
         Reset Form
       </button>
-      {{isEdit}}
       <div class="donut-form-working" *ngIf="form.valid && form.submitted">
         working...
       </div>

@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Donut } from '../../models/donut.model';
 import { DonutService } from '../../service/donut.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DonutFormComponent } from '../../component/donut-form/donut-form.component';
 
 @Component({
+  standalone: true,
+  imports: [DonutFormComponent],
+  providers: [DonutService],
   selector: 'app-donut-single',
   template: `
     <div>
@@ -24,6 +28,7 @@ export class DonutSingleComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private donutService: DonutService
   ) {}
 
@@ -34,18 +39,20 @@ export class DonutSingleComponent implements OnInit {
       .readOne(id)
       .subscribe((donut: Donut) => (this.donut = donut));
 
-    this.isEdit = this.route.snapshot.data.isEdit;
+    this.isEdit = this.route.snapshot.data['isEdit'];
   }
 
   public onCreate(donut: Donut): void {
     this.donutService
       .create(donut)
-      .subscribe(() => console.log('created successfully'));
+      .subscribe((donut) =>
+        this.router.navigate(['admin', 'donuts', donut.id])
+      );
   }
 
   public onUpdate(donut: Donut): void {
     this.donutService.update(donut).subscribe({
-      next: () => console.log('updated successfully!'),
+      next: () => this.router.navigate(['admin']),
       error: (err) => console.log('onUpdate error', err),
     });
   }
@@ -53,6 +60,6 @@ export class DonutSingleComponent implements OnInit {
   public onDelete(donut: Donut): void {
     this.donutService
       .delete(donut)
-      .subscribe(() => console.log('deleted successfully'));
+      .subscribe(() => this.router.navigate(['admin']));
   }
 }

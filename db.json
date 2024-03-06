@@ -4,7 +4,7 @@
       "id": "y8z0As",
       "name": "Just Chocolate",
       "icon": "just-chocolate",
-      "price": 199,
+      "price": 169,
       "promo": "limited",
       "description": "For the pure chocoholic."
     },
@@ -36,6 +36,14 @@
       "icon": "zesty-lemon",
       "price": 129,
       "description": "Delicious lucious lemon"
+    },
+    {
+      "name": "testing",
+      "icon": "strawberry-glaze",
+      "price": 1,
+      "promo": "new",
+      "description": "lala",
+      "id": "UoehSVN"
     }
   ]
 }
